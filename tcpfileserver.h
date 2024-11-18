@@ -18,6 +18,12 @@ public slots:
     void updateServerProgress();
     void displayError(QAbstractSocket::SocketError socketError);
 private:
+private:
+    QLineEdit *ipLineEdit;   // 輸入 IP 的框
+    QLineEdit *portLineEdit; // 輸入端口的框
+    QLabel    *ipLabel;      // IP 輸入提示
+    QLabel    *portLabel;    // 端口輸入提示
+
     QProgressBar     *serverProgressBar;
     QLabel           *serverStatusLabel;
     QPushButton      *startButton;

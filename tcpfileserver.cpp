@@ -6,6 +6,14 @@ TcpFileServer::TcpFileServer(QWidget *parent)
     totalBytes = 0;
     byteReceived = 0;
     fileNameSize = 0;
+    // 初始化新控件
+    ipLabel = new QLabel(QStringLiteral(" IP："));
+    ipLineEdit = new QLineEdit("127.0.0.1"); // 默認 IP
+    portLabel = new QLabel(QStringLiteral("PORT："));
+    portLineEdit = new QLineEdit("16998");   // 默認端口
+    ipLineEdit->setPlaceholderText(QStringLiteral("輸入 IP 地址"));
+    portLineEdit->setPlaceholderText(QStringLiteral("輸入端口號"));
+
     serverProgressBar = new QProgressBar;
     serverStatusLabel = new QLabel(QStringLiteral("伺服器端就緒"));
     startButton = new QPushButton(QStringLiteral("接收"));
@@ -14,18 +22,26 @@ TcpFileServer::TcpFileServer(QWidget *parent)
     buttonBox->addButton(startButton, QDialogButtonBox::ActionRole);
     buttonBox->addButton(quitButton,QDialogButtonBox::RejectRole);
 
+    // 將控件加入布局
     QVBoxLayout *mainLayout = new QVBoxLayout;
+    QHBoxLayout *inputLayout = new QHBoxLayout;
+    inputLayout->addWidget(ipLabel);
+    inputLayout->addWidget(ipLineEdit);
+    inputLayout->addWidget(portLabel);
+    inputLayout->addWidget(portLineEdit);
+    mainLayout->addLayout(inputLayout);
     mainLayout->addWidget(serverProgressBar);
     mainLayout->addWidget(serverStatusLabel);
     mainLayout->addStretch();
     mainLayout->addWidget(buttonBox);
     setLayout(mainLayout);
     setWindowTitle(QStringLiteral("接收檔案"));
+    // 信號與槽連接
     connect(startButton, SIGNAL(clicked()), this, SLOT(start()));
     connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
     connect(&tcpServer, SIGNAL(newConnection()), this, SLOT(acceptConnection()));
-    connect(&tcpServer, SIGNAL(acceptError(QAbstractSocket::SocketError)),this,
-            SLOT(displayError(QAbstractSocket::SocketError)));
+    connect(&tcpServer, SIGNAL(acceptError(QAbstractSocket::SocketError)),
+            this, SLOT(displayError(QAbstractSocket::SocketError)));
  }
 
 TcpFileServer::~TcpFileServer()
